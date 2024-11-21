@@ -8,13 +8,19 @@ import pandas as pd
 from datetime import datetime
 
 
-st.set_page_config(page_title="Monitoring-kki-2024", page_icon="🌍", layout="wide")
+st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="wide")
 
 # Backend URL
-FLASK_URL = 'http://127.0.0.1:5000/data-receive'
+url = "https://parseapi.back4app.com/classes/Monitoring"
+HEADERS = {
+    "X-Parse-Application-Id": "8bfJ9zjY6QwRlihGZ2Ln0IZsxaKpNBIEkztavQnE",  # Ganti dengan Application ID dari Back4App
+    "X-Parse-REST-API-Key": "C33dLXBbeIjGAcQELuCvfxJWEb9gTw1S68L1YRwr",      # Ganti dengan REST API Key dari Back4App
+    "Content-Type": "application/json"
+}
+
 def data_backend():
     try:
-        response = requests.get(FLASK_URL)
+        response = requests.get(url, headers=HEADERS)
         response.raise_for_status()
         return response.json()
     except requests.RequestException as e:
@@ -217,16 +223,16 @@ def update_plot():
         try:
             
             if path == "Lintasan B ⚓":
-                x = data.get('x') + 335
-                y = data.get('y') + 115
+                X = data.get('Position_X') + 335
+                Y = data.get('Position_Y') + 115
                 
             else:
-                x = data.get('x') + 2185
-                y = data.get('y') + 115
+                X = data.get('Position_X') + 2185
+                Y = data.get('Position_Y') + 115
                 # y = data.get('y') + 300
 
-            nilai_x = data.get('x')
-            nilai_y = data.get('y')
+            X = data.get('Position_X')
+            Y = data.get('Position_Y')
             knot = data.get('sog_knot')
             km_per_hours = data.get('sog_kmh')
             cog = data.get('cog')
