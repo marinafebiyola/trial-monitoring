@@ -29,13 +29,13 @@ start_monitoring_button = st.sidebar.button("START BUTTON", key="start_monitorin
 #Header
 col1, col2, col3, col4 = st.columns([1,4,4,1])
 with col1:
-    st.image('logo.jpeg', width=75)
+    st.image('Images/logo.jpeg', width=75)
 with col2:
     st.markdown("<h6 class='header-text'> BARELANG MARINE ROBOTICS TEAM </h6>", unsafe_allow_html=True)
 with col3:
     st.markdown("<h6 class='header-text'> POLITEKNIK NEGERI BATAM </h6>", unsafe_allow_html=True)
 with col4:
-    st.image('polibatamLogo.jpeg', width=80)
+    st.image('Images/polibatamLogo.jpeg', width=80)
 
 #lintasan
 if path == "Lintasan A ⚓":
@@ -161,9 +161,9 @@ def hasil_foto_underwater():
 def gambar_lintasan_lomba():
     col1, col2 = st.columns(2)
     with col1:
-        st.image('lintasanA.jpeg', caption='Lintasan A')
+        st.image('Images/lintasanA.jpeg', caption='Lintasan A')
     with col2:
-        st.image('lintasanB.jpeg', caption='Lintasan B')
+        st.image('Images/lintasanB.jpeg', caption='Lintasan B')
 
 #Visualisasi arah hadap kapal
 triangle_patch = None
