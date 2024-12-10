@@ -10,17 +10,14 @@ from datetime import datetime
 st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="wide")
 
 # Back4App credentials
-APPLICATION_ID = "8bfJ9zjY6QwRlihGZ2Ln0IZsxaKpNBIEkztavQnE"
-REST_API_KEY = "C33dLXBbeIjGAcQELuCvfxJWEb9gTw1S68L1YRwr"
-BASE_URL = "https://parseapi.back4app.com/classes/Monitoring"
-
+BASE_URL    = "https://parseapi.back4app.com/classes/Monitoring"
+headers     = {
+        "X-Parse-Application-Id"    : '8bfJ9zjY6QwRlihGZ2Ln0IZsxaKpNBIEkztavQnE',
+        "X-Parse-REST-API-Key"      :'C33dLXBbeIjGAcQELuCvfxJWEb9gTw1S68L1YRwr',
+    }
 #Endpoint Backend
 def backend_data():
-    headers = {
-        "X-Parse-Application-Id": APPLICATION_ID,
-        "X-Parse-REST-API-Key": REST_API_KEY,
-    }
-    response = requests.get(BASE_URL, headers=headers)
+    response = requests.get(BASE_URL, headers=headers, params={"order": "-createdAt", "limit": 1})
     if response.status_code == 200:
         return response.json().get("results", [])
     else:
@@ -429,7 +426,7 @@ if start_monitoring_button:
         update_plot()
         foto_sbox()
         foto_ubox()
-        time.sleep(5)       
+        time.sleep(1)       
 else:
     gambar_lintasan_lomba()
 
