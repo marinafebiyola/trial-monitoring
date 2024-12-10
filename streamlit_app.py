@@ -426,7 +426,7 @@ if start_monitoring_button:
         update_plot()
         foto_sbox()
         foto_ubox()
-        time.sleep(1)       
+        time.sleep(0.5)       
 else:
     gambar_lintasan_lomba()
 
