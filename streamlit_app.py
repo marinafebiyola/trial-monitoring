@@ -19,7 +19,9 @@ headers     = {
 def backend_data():
     response = requests.get(BASE_URL, headers=headers, params={"order": "-createdAt", "limit": 1})
     if response.status_code == 200:
+        
         return response.json().get("results", [])
+    
     else:
         st.error(f"Failed: {response.status_code}")
         return []
@@ -220,17 +222,17 @@ def update_plot():
         for data in data:
             try:
                 
-                nilai_x = data.get('Position_X')
-                nilai_y = data.get('Position_Y')
-                knot = data.get('SOG_Knot')
-                km_per_hours = data.get('SOG_kmperhours')
-                cog = data.get('COG')
-                day = data.get('Day')
-                date = data.get('Date')
-                time_value = data.get('Time')
-                latt = data.get('Lattitude')
-                lon = data.get('Longitude')
-                yaw = data.get('Yaw')
+                nilai_x         = data.get('Position_X')
+                nilai_y         = data.get('Position_Y')
+                knot            = data.get('SOG_knot')
+                km_per_hours    = data.get('SOG_kmperhours')
+                cog             = data.get('COG')
+                day             = data.get('Day')
+                date            = data.get('Date')
+                time_value      = data.get('Time')
+                latt            = data.get('Lattitude')
+                lon             = data.get('Longitude')
+                yaw             = data.get('Yaw')
 
                 if path == "Lintasan B ⚓":
                     x = data.get('Position_X') + 335
