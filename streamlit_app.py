@@ -12,8 +12,8 @@ st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="w
 # Back4App credentials
 BASE_URL    = "https://parseapi.back4app.com/classes/Monitoring"
 headers     = {
-        "X-Parse-Application-Id"    : '8bfJ9zjY6QwRlihGZ2Ln0IZsxaKpNBIEkztavQnE',
-        "X-Parse-REST-API-Key"      :'C33dLXBbeIjGAcQELuCvfxJWEb9gTw1S68L1YRwr',
+        "X-Parse-Application-Id"    :'u2xhADWhGr60UE7rFi3tSMlwNHO22P1j5yOgxrpq',
+        "X-Parse-REST-API-Key"      :'ymQSx4v4zofZbyXl179pSbJG2OxwW4GBczUbKyBd',
     }
 #Endpoint Backend
 def backend_data():
@@ -452,7 +452,7 @@ st.markdown("""
     <style>
         .header-text {
             text-align: center;
-            color: #ffff;
+            color: #FFFF;
             background-color: #3A6E8F;
             padding: 15px; 
             border-radius: 15px;
@@ -488,7 +488,7 @@ st.markdown("""
         }
         .stButton > button {
             background-color: #4CAF50; 
-            color: #ffff;    
+            color: #FFFF;    
             border: 2px solid white;
             font-weight: bold; 
         }
@@ -510,7 +510,7 @@ st.markdown(
         }
         [data-testid="stSidebar"] {
             background-color: #7FBADC;
-            color: #ffff;
+            color: #FFFF;
             font-weight: bold;
             font-family: 'Montserrat', sans-serif; 
         }
