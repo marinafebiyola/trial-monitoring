@@ -1,19 +1,16 @@
 import streamlit as st
 import requests
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type:ignore
 import time
 import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
-    
+
 st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="wide")
 
 with open("style.css") as css_file:
     st.markdown(f'<style>{css_file.read()}</style>', unsafe_allow_html=True)
-
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Back4App credentials
 BASE_URL    = "https://parseapi.back4app.com/classes/Monitoring"
@@ -150,6 +147,8 @@ def foto_sbox():
         with image_placeholder.container():
             col1, _ = st.columns([1, 1])
             with col1:
+                with open("style.css") as css_file:
+                    st.markdown(f'<style>{css_file.read()}</style>', unsafe_allow_html=True)
                 st.markdown("<h6 class='judul-text'>Water Surface Picture</h6>", unsafe_allow_html=True)
                 st.image(surface_path, caption="Green Box", use_column_width=True)
 
@@ -438,89 +437,3 @@ if start_monitoring_button:
 else:
     gambar_lintasan_lomba()
 
-page_bg_img = f"""
-<style>
-[data-testid="stAppViewContainer"] > .main {{
-background-color: #b2d3eb;
-background-size: cover;
-background-position: center center;
-background-repeat: no-repeat;
-background-attachment: local;
-}}
-[data-testid="stHeader"] {{
-background: rgba(0,0,0,0);
-}}
-</style>
-"""
-st.markdown(page_bg_img, unsafe_allow_html=True)
-
-st.markdown("""
-    <style>
-        .header-text {
-            text-align: center;
-            color: white;
-            background-color: #3A6E8F;
-            padding: 15px; 
-            border-radius: 15px;
-            margin-bottom: 1px; 
-            border: 2px solid white;
-            font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
-
-        }
-        .judul-text {
-            text-align: center;
-            color: white;
-            background-color: #65A7D3;
-            padding: 5px; 
-            border-radius: 10px;
-            margin-bottom: 5px; 
-            border: 2px solid white;
-            font-size: 14px;
-            font-family: 'Montserrat', sans-serif;
-
-        }
-        [data-testid="stMetricValue"] {
-            font-size: 16px;
-            color : #242649;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold; 
-
-        }
-        [data-testid="stMetricLabel"] {
-            font-size: 12px;
-            color : black;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .stButton > button {
-            background-color: #4CAF50; 
-            color: #FFFF;    
-            border: 2px solid white;
-            font-weight: bold; 
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-st.markdown(
-    """
-    <style>
-    .sidebar-text {
-            text-align: center;
-            color: #FFFF;
-            background-color: #3A6E8F;
-            padding: 10px; 
-            border-radius: 15px;
-            border: 2px solid white;
-            font-size: 12px;
-            font-family: 'Montserrat', sans-serif;
-        }
-        [data-testid="stSidebar"] {
-            background-color: #7FBADC;
-            color: #FFFF;
-            font-weight: bold;
-            font-family: 'Montserrat', sans-serif; 
-        }
-    </style>
-    """, 
-    unsafe_allow_html=True
-)
