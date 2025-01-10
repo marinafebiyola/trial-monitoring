@@ -9,15 +9,8 @@ from datetime import datetime
 
 st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="wide")
 
-st.markdown("""
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        .sidebar-text, .header-text, .judul-text {
-            font-family: 'Montserrat', sans-serif;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Back4App credentials
 BASE_URL    = "https://parseapi.back4app.com/classes/Monitoring"
