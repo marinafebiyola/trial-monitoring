@@ -458,7 +458,7 @@ st.markdown("""
     <style>
         .header-text {
             text-align: center;
-            color: #FFFF;
+            color: white;
             background-color: #3A6E8F;
             padding: 15px; 
             border-radius: 15px;
