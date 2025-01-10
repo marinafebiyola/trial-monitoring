@@ -1,13 +1,13 @@
 import streamlit as st
 import requests
-import matplotlib.pyplot as plt # type:ignore
+import matplotlib.pyplot as plt
 import time
 import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
 
-st.set_page_config(page_title="onitoring-kki-2024", page_icon="🌍", layout="wide")
+st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="wide")
 
 with open("style.css") as css_file:
     st.markdown(f'<style>{css_file.read()}</style>', unsafe_allow_html=True)
