@@ -203,9 +203,7 @@ def file_foto(files, filename):
     return None
 
 def tampilkan_foto():
-    """
-    Menampilkan gambar sbox.png (Surface) dan ubox.png (Underwater).
-    """
+
     files = repo_foto()
     sbox_url = file_foto(files, "sbox.png")
     ubox_url = file_foto(files, "ubox.png")
@@ -464,8 +462,7 @@ if start_button:
     st.text("Monitoring started...")
     while True:
         update_plot()
-        tampilkan_foto()
-        tampilkan_foto()
+        start_image_update()
         time.sleep(1)       
 else:
     gambar_lintasan_lomba()
