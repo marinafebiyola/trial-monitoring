@@ -2,7 +2,6 @@ import streamlit as st
 import requests
 import matplotlib.pyplot as plt
 import time
-import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -12,23 +11,21 @@ st.set_page_config(page_title="monitoring-kki-2024", page_icon="🌍", layout="w
 with open("style.css") as css_file:
     st.markdown(f'<style>{css_file.read()}</style>', unsafe_allow_html=True)
 
-# Back4App credentials
+# Back4App
 BASE_URL    = "https://parseapi.back4app.com/classes/Monitoring"
-headers     = {
-        "X-Parse-Application-Id"    :'HqY2ohIviLpukkUhcmrXwxBHKioM4XNqPmlhZQkC',
-        "X-Parse-REST-API-Key"      :'qZStiQ6o7gbKENbw9LveHxt5Oy6a9iARCDTubv4u',
+HEADERS1     = {
+        "X-Parse-Application-Id"    :'J7xYdQus8kROlyFHERfKObKB8VQbvpbBPXf10s4q',
+        "X-Parse-REST-API-Key"      :'VauAjqXNMnG6WM9gcNyB44GkfbZUjF5nCvRRKTRa',
     }
-#Endpoint Backend
-def backend_data():
-    response = requests.get(BASE_URL, headers=headers, params={"order": "-createdAt", "limit": 1})
-    if response.status_code == 200:
-        
-        return response.json().get("results", [])
-    
-    else:
-        st.error(f"Failed: {response.status_code}")
-        return []
 
+#Github
+GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+GITHUB_REPO = "https://api.github.com/repos/marinafebiyola/web_monitoring/contents/"
+HEADERS2 = {
+    "Authorization": f"token {GITHUB_TOKEN}",
+    "Accept": "application/vnd.github.v3+json"
+}
+ 
 #sidebar
 st.sidebar.markdown('<h4 class="sidebar-text">NAVIGASI LINTASAN</h4>', unsafe_allow_html=True)
 path = st.sidebar.radio("", ["Lintasan A ⚓", "Lintasan B ⚓"])
@@ -75,8 +72,11 @@ with col4:
 #Position-log
 st.markdown("<h6 class='judul-text'>POSITION-LOG</h6>", unsafe_allow_html=True)
 table_placeholder = st.empty()    
-   
+
+#Trajectory Map   
 st.markdown("<h6 class='judul-text'>TRAJECTORY MAP</h6>", unsafe_allow_html=True)
+plot_placeholder = st.empty()
+
 def koordinat_kartesius(path):
     fig, ax = plt.subplots(figsize=(13, 13))
     ax.set_xlim(0, 2500)
@@ -137,6 +137,8 @@ def posisi_floating_ball(path):
                            (1300, 2250), (1460, 2250), (2050, 1715), (2170, 1310), (2170, 960)]
     return red_positions, green_positions
 
+fig, ax = koordinat_kartesius(path)
+
 def gambar_lintasan_lomba():
     col1, col2 = st.columns(2)
     with col1:
@@ -173,90 +175,24 @@ def heading_kapal(ax, x, y, yaw):
     
     ax.figure.canvas.draw()
 
-plot_placeholder = st.empty()
-
-image_placeholder = st.empty()
-
-fig, ax = koordinat_kartesius(path)
-foto_surface_placeholder    = st.empty()
-foto_underwater_placeholder = st.empty()
-
-GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
-GITHUB_REPO = "https://api.github.com/repos/marinafebiyola/web_monitoring/contents/"
-HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}",
-    "Accept": "application/vnd.github.v3+json"
-}
-def repo_foto():
-    response = requests.get(GITHUB_REPO, headers=HEADERS)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        st.error(f"Gagal mengakses repositori: {response.status_code} - {response.text}")
-        return []
-
-def file_foto(files, filename):
-  
-    for file in files:
-        if file["name"] == filename:
-            return file["download_url"]
-    return None
-
-def tampilkan_foto():
-
-    files = repo_foto()
-    sbox_url = file_foto(files, "sbox.png")
-    ubox_url = file_foto(files, "ubox.png")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if sbox_url:
-            st.markdown("<h6 class='judul-text'>GREEN BOX</h6>", unsafe_allow_html=True)
-            st.image(sbox_url, caption="Surface", use_container_width=True)
-        else:
-            st.warning("File sbox.png tidak ditemukan.")
-
-    with col2:
-        if ubox_url:
-            st.markdown("<h6 class='judul-text'>BLUE BOX</h6>", unsafe_allow_html=True)
-            st.image(ubox_url, caption="Underwater", use_container_width=True)
-        else:
-            st.warning("File ubox.png tidak ditemukan.")
-
-# Loop untuk memperbarui gambar setiap 5 detik
-def start_image_update(interval=5):
-    image_placeholder = st.empty()
-    while True:
-        with image_placeholder.container():
-            tampilkan_foto()
-        time.sleep(interval)
-
-#Update data
 table_entries = [] 
 trajectory_x = []
 trajectory_y = []
+finished = False
 floating_ball_count = 0
 trajectory_line, = ax.plot([], [], color='black', linestyle='--', marker='o', markersize=1)
 
 if "start_displayed" not in st.session_state:
     st.session_state.start_displayed = False
-    st.session_state.floating_1 = False
-    st.session_state.floating_2 = False
-    st.session_state.floating_3 = False
-    st.session_state.floating_4 = False
-    st.session_state.floating_5 = False
-    st.session_state.floating_6 = False
-    st.session_state.floating_7 = False
-    st.session_state.floating_8 = False
-    st.session_state.floating_9 = False
-    st.session_state.floating_10 = False
     st.session_state.finish_displayed = False
     
-finished = False
+    # Buat 10 state untuk floating ball
+    for i in range(1, 11):
+        st.session_state[f"floating_{i}"] = False
+
 
 def update_plot():
-    global trajectory_x, trajectory_y, floating_ball_count, nilai_x, nilai_y, finished
+    global trajectory_x, trajectory_y, floating_ball_count, finished, nilai_x, nilai_y
     data = backend_data()
     
     if data:
@@ -409,60 +345,74 @@ def update_plot():
                         }
                         table_entries.append(entry)
 
-                    if floating_ball_count == 1 and not st.session_state.floating_1:
-                        st.session_state.floating_1 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
+                    for i in range(1, 11):
+                        key = f"floating_{i}"
+                        if floating_ball_count == i and not st.session_state.get(key, False):
+                            st.session_state[key] = True
+                            st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {i}</h4>", unsafe_allow_html=True)
 
-                    if floating_ball_count == 2 and not st.session_state.floating_2:
-                        st.session_state.floating_2 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
 
-                    if floating_ball_count == 3 and not st.session_state.floating_3:
-                        st.session_state.floating_3 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-                    
-                    if floating_ball_count == 4 and not st.session_state.floating_4:
-                        st.session_state.floating_4 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-
-                    if floating_ball_count == 5 and not st.session_state.floating_5:
-                        st.session_state.floating_5 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-
-                    if floating_ball_count == 6 and not st.session_state.floating_6:
-                        st.session_state.floating_6 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-
-                    if floating_ball_count == 7 and not st.session_state.floating_7:
-                        st.session_state.floating_7 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-
-                    if floating_ball_count == 8 and not st.session_state.floating_8:
-                        st.session_state.floating_8 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-                    
-                    if floating_ball_count == 9 and not st.session_state.floating_9:
-                        st.session_state.floating_9 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
-
-                    if floating_ball_count == 10 and not st.session_state.floating_10:
-                        st.session_state.floating_10 = True
-                        st.sidebar.markdown(f"<h4 class='mission-text'>FLOATING BALL {floating_ball_count}</h4>", unsafe_allow_html=True)
             except (TypeError, KeyError) as e:
-                st.error(f"Error processing data: {e}")  
+                st.error(f"Error processing data: {e}")
+
     else:
         st.warning("No data received.")
 
+def backend_data():
+    response = requests.get(BASE_URL, headers=HEADERS1, params={"order": "-createdAt", "limit": 1})
+    if response.status_code == 200:
+        
+        return response.json().get("results", [])
+    
+    else:
+        st.error(f"Failed: {response.status_code}")
+        return []
 
-# Main loop
+def repo_foto():
+    response = requests.get(GITHUB_REPO, headers=HEADERS2)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        st.error(f"Gagal mengakses repositori: {response.status_code} - {response.text}")
+        return []
+
+def file_foto(files, filename):            
+    for file in files:
+        if file["name"] == filename:
+            return file["download_url"]
+    return None
+
+def tampilkan_foto(image_placeholder):
+    files = repo_foto()
+    sbox_url = file_foto(files, "sbox.png")
+    ubox_url = file_foto(files, "ubox.png")
+
+    with image_placeholder.container():  # Mengupdate area gambar
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if sbox_url:
+                st.markdown("<h6 class='judul-text'>GREEN BOX</h6>", unsafe_allow_html=True)
+                st.image(sbox_url, caption="Surface", use_container_width=True)
+            else:
+                st.warning("File sbox.png tidak ditemukan.")
+
+        with col2:
+            if ubox_url:
+                st.markdown("<h6 class='judul-text'>BLUE BOX</h6>", unsafe_allow_html=True)
+                st.image(ubox_url, caption="Underwater", use_container_width=True)
+            else:
+                st.warning("File ubox.png tidak ditemukan.")
+
 if start_button:
     st.session_state.monitoring_active = True
     st.sidebar.markdown('<style>div.stButton > button {background-color: #2E7431; color: white;}</style>', unsafe_allow_html=True)
     st.sidebar.markdown("<h4 class='mission-text'>PREPARING</h4>", unsafe_allow_html=True)
     st.text("Monitoring started...")
+    image_placeholder = st.empty()
     while True:
         update_plot()
-        start_image_update()
-        time.sleep(1)       
+        tampilkan_foto(image_placeholder)
+        time.sleep(3)       
 else:
     gambar_lintasan_lomba()
